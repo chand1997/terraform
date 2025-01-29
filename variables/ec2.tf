@@ -1,11 +1,9 @@
 resource "aws_instance" "web" {
-  ami                    = "ami-09c813fb71547fc4f"
-  instance_type          = "t3.micro"
+  ami                    = var.image_id
+  instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
 
-  tags = {
-    Name = "Terraform-demo"
-  }
+  tags = var.ec2_tags
 }
 
 
@@ -15,21 +13,19 @@ resource "aws_security_group" "allow_tls" {
   description = "Allow TLS inbound traffic and all outbound traffic"
 
   ingress {
-    from_port   = 22
-    to_port     = 22
+    from_port   = var.ingress_port
+    to_port     = var.ingress_port
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.cidr_blocks
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
+    from_port   = var.egress_port
+    to_port     = var.egress_port
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.cidr_blocks
   }
 
 
-  tags = {
-    Name = "allow_tls"
-  }
+  tags = var.sg_tags
 }
